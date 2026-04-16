@@ -20,9 +20,12 @@ WORKDIR /build/llama.cpp
 RUN cmake -B build \
     -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_SHARED_LIBS=OFF \
+    -DGGML_NATIVE=OFF \
     -DGGML_OPENMP=ON \
     -DLLAMA_BUILD_TESTS=OFF \
     -DLLAMA_BUILD_EXAMPLES=OFF \
+    -DCMAKE_C_FLAGS="-march=armv8.2-a+dotprod+fp16+crypto" \
+    -DCMAKE_CXX_FLAGS="-march=armv8.2-a+dotprod+fp16+crypto" \
     && cmake --build build --config Release --target llama-server -j$(nproc)
 
 # Stage 2: Download model (separate for independent caching)
