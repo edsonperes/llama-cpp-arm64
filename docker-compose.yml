@@ -1,0 +1,82 @@
+name: llama-cpp-arm64
+services:
+  llama-cpp:
+    image: ghcr.io/edsonperes/llama-cpp-arm64:1.0.0
+    container_name: llama-cpp-server
+    restart: unless-stopped
+    ports:
+      - target: 8080
+        published: "8080"
+        protocol: tcp
+    environment:
+      HOST: "0.0.0.0"
+      PORT: "8080"
+      THREADS: "4"
+      CTX_SIZE: "2048"
+      PARALLEL: "1"
+      BATCH_SIZE: "512"
+    deploy:
+      resources:
+        reservations:
+          memory: "4096M"
+    x-casaos:
+      envs:
+        - container: THREADS
+          description:
+            en_US: Number of CPU threads for inference
+            pt_BR: Numero de threads da CPU para inferencia
+        - container: CTX_SIZE
+          description:
+            en_US: Context window size (tokens)
+            pt_BR: Tamanho da janela de contexto (tokens)
+        - container: PARALLEL
+          description:
+            en_US: Number of parallel request slots
+            pt_BR: Numero de slots de requisicoes paralelas
+        - container: BATCH_SIZE
+          description:
+            en_US: Batch size for prompt processing
+            pt_BR: Tamanho do lote para processamento de prompt
+        - container: PORT
+          description:
+            en_US: API server port
+            pt_BR: Porta do servidor API
+      ports:
+        - container: "8080"
+          description:
+            en_US: OpenAI-compatible API port
+            pt_BR: Porta da API compativel com OpenAI
+
+x-casaos:
+  architectures:
+    - arm64
+  main: llama-cpp
+  author: edsonperes
+  category: AI
+  description:
+    en_US: LLM inference server using llama.cpp with Bonsai 8B (Q1_0 1-bit). OpenAI-compatible API for OpenWebUI. Optimized for OrangePi 5 / ARM64.
+    pt_BR: Servidor de inferencia LLM usando llama.cpp com Bonsai 8B (Q1_0 1-bit). API compativel com OpenAI para OpenWebUI. Otimizado para OrangePi 5 / ARM64.
+  developer: PrismML / Community
+  icon: https://raw.githubusercontent.com/edsonperes/llama-cpp-arm64/main/icon.png
+  tagline:
+    en_US: Bonsai 8B AI on OrangePi 5
+    pt_BR: Bonsai 8B IA no OrangePi 5
+  title:
+    en_US: llama.cpp Bonsai 8B
+    pt_BR: llama.cpp Bonsai 8B
+  tips:
+    before_install:
+      en_US: |
+        Requirements:
+        - OrangePi 5 or ARM64 board with 8GB+ RAM (16GB recommended)
+        - Model is included in the image (no download needed)
+        - Image size ~1.5GB (includes Bonsai 8B Q1_0 model)
+        - Connect OpenWebUI: http://<device-ip>:8080/v1
+      pt_BR: |
+        Requisitos:
+        - OrangePi 5 ou placa ARM64 com 8GB+ RAM (16GB recomendado)
+        - Modelo incluido na imagem (sem download necessario)
+        - Tamanho da imagem ~1.5GB (inclui modelo Bonsai 8B Q1_0)
+        - Conectar OpenWebUI: http://<ip-dispositivo>:8080/v1
+  index: /health
+  port_map: "8080"
